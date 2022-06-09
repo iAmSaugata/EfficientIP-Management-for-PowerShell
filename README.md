@@ -3,11 +3,11 @@ I wrote this functions/module to manage SOLIDserver EfficientIP from Powershell,
 
 You can do following tasks using this function/module.
 >Set-IPAMAuthURI - To store access url and credentials in the memory.
-Get-IPAMQueryMaster - To query about master subnet.
-Get-IPAMSubnets - To get details about subnet.
-Get-IPAMFreeIP - To get next available subnet form IPAM.
-New-IPAMSubnet - To create new subnet in IPAM.
-Remove-IPAMSubnet - To remove existing subnet in IPAM.
+>Get-IPAMQueryMaster - To query about master subnet.
+>Get-IPAMSubnets - To get details about subnet.
+>Get-IPAMFreeIP - To get next available subnet form IPAM.
+>New-IPAMSubnet - To create new subnet in IPAM.
+>Remove-IPAMSubnet - To remove existing subnet in IPAM.
 
 
 Sample tasks:
