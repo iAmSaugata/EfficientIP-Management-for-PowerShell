@@ -1,5 +1,5 @@
 # EfficientIP-Management-for-PowerShell
-I wrote this functions/module to manage SOLIDserver EfficientIP from Powershell, and do some autiomation for AWS and Azure. 
+I wrote this functions/module to manage SOLIDserver EfficientIP from PowerShell, and do some automation for AWS and Azure.
 
 You can do following tasks using this function/module.
 >Set-IPAMAuthURI - To store access url and credentials in the memory.
