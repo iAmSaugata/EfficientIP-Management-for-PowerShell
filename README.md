@@ -2,7 +2,7 @@
 I wrote this functions/module to manage SOLIDserver EfficientIP from Powershell, and do some autiomation for AWS and Azure. 
 
 You can do following tasks using this function/module.
-Set-IPAMAuthURI - To store access url and credentials in the memory.
+>Set-IPAMAuthURI - To store access url and credentials in the memory.
 Get-IPAMQueryMaster - To query about master subnet.
 Get-IPAMSubnets - To get details about subnet.
 Get-IPAMFreeIP - To get next available subnet form IPAM.
@@ -11,7 +11,7 @@ Remove-IPAMSubnet - To remove existing subnet in IPAM.
 
 
 Sample tasks:
-#Set-IPAMAuthURI -URI "https://url.of.efficient.in" -UserName "UserName-of-efficient-ip" -Password "Password-of-this-account"
+>#Set-IPAMAuthURI -URI "https://url.of.efficient.in" -UserName "UserName-of-efficient-ip" -Password "Password-of-this-account"
 #Get-IPAMQueryMaster -SiteNameLike "similar name"
 #Get-IPAMQueryMaster -SiteName "exact name"
 #Get-IPAMSubnets -SubnetNameLike "similar name"
