@@ -383,7 +383,7 @@ Param (
     }
 }
 
-#Get-IPAMFreeIP -SubnetName "Subnet Name" -CIDR 22 -
+#Get-IPAMFreeIP -SubnetName "Subnet Name" -CIDR 22
 function Get-IPAMFreeIP{
 Param (
     [Parameter()][int] $SubnetId,
@@ -512,7 +512,7 @@ Param (
     }
 }
 
-#New-IPAMSubnet -NewSubnetName "My Subnet Name" -NewSubnetRange X.X.X.X -ParentSubnetId 67951 -CIDR 22
+#New-IPAMSubnet -NewSubnetName "My Subnet Name" -NewSubnetRange X.X.X.X -ParentSubnetId 12345 -CIDR 22
 function New-IPAMSubnet{
 Param (
     [Parameter(Mandatory=$true)][string] $NewSubnetName,
