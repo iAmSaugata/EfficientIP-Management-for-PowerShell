@@ -2,7 +2,7 @@
 # Created By: Saugata Datta
 # Version: 1.1
 ###########################
-#Set-IPAMAuthURI -URI "https://url.of.efficient.in" -UserName "UserName-of-efficient-ip" -Password "Password-of-this-account"
+#Set-IPAMAuthURI -URI "https://fqdn.efficientip.host" -UserName "Account-Having-Access" -Password "Password-of-this-account"
 function Set-IPAMAuthURI{
 Param (
     [Parameter(Mandatory=$true)][string] $URI,
@@ -143,6 +143,7 @@ Param (
     [Parameter()][string] $SubnetName,
     [Parameter()][string] $SubnetNameLike,
     [Parameter()][string] $ParentSubnetId,
+    [Parameter()][string] $StartAddress,
     [Switch]$Quite,
     [Switch]$RawData
 )
@@ -151,6 +152,51 @@ Param (
         if($SubnetName)
         {
             $getSubnets = Invoke-RestMethod -Headers $IPAMAuth -Method Get -Uri "$IPAMURI/rest/ip_block_subnet_list?WHERE=subnet_name='$SubnetName'"
+            if(!$RawData.IsPresent)
+            {
+                if($getSubnets)
+                {
+                    $MyObjects=@()
+                    foreach ($subnet in $getSubnets)
+                    {
+                        $MyObject = New-Object -TypeName PSObject
+                        $MyObject | Add-Member @{SubnetName=$($subnet.subnet_name)}       
+                        $MyObject | Add-Member @{SubnetId=$($subnet.subnet_id)}
+                        $MyObject | Add-Member @{StartAddress=$($subnet.start_hostaddr)}
+                        $MyObject | Add-Member @{EndAddress=$($subnet.end_hostaddr)}
+                        $MyObject | Add-Member @{CIDR=$CIDRMapping["$([math]::log($($subnet.subnet_size),2))"]}
+                        $MyObject | Add-Member @{SubnetUsedPercent=$($subnet.subnet_allocated_percent)}
+                        $MyObject | Add-Member @{ParentSubnetId=$($subnet.parent_subnet_id)}
+                        $MyObjects += $MyObject
+                    }                    
+                    return $MyObjects
+                }
+                else
+                {
+                    if(!$Quite.IsPresent)
+                    {
+                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    }
+                }
+            }
+            else
+            {
+                if($getSubnets)
+                {
+                    return $getSubnets
+                }
+                else
+                {
+                    if(!$Quite.IsPresent)
+                    {
+                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    }
+                }
+            }
+        }
+        if($StartAddress)
+        {
+            $getSubnets = Invoke-RestMethod -Headers $IPAMAuth -Method Get -Uri "$IPAMURI/rest/ip_block_subnet_list?WHERE=start_hostaddr='$StartAddress'"
             if(!$RawData.IsPresent)
             {
                 if($getSubnets)
@@ -337,7 +383,7 @@ Param (
     }
 }
 
-#Get-IPAMFreeIP -SubnetName "Subnet Name" -CIDR 22
+#Get-IPAMFreeIP -SubnetName "Subnet Name" -CIDR 22 -
 function Get-IPAMFreeIP{
 Param (
     [Parameter()][int] $SubnetId,
@@ -466,7 +512,7 @@ Param (
     }
 }
 
-#New-IPAMSubnet -NewSubnetName "My Subnet Name" -NewSubnetRange X.X.X.X -ParentSubnetId 123456 -CIDR 22
+#New-IPAMSubnet -NewSubnetName "My Subnet Name" -NewSubnetRange X.X.X.X -ParentSubnetId 67951 -CIDR 22
 function New-IPAMSubnet{
 Param (
     [Parameter(Mandatory=$true)][string] $NewSubnetName,
