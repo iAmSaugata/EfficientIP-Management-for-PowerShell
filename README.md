@@ -6,7 +6,7 @@ You can do following tasks using this function/module.
 >
 >Get-IPAMQueryMaster - To query about master subnet.
 >
->Get-IPAMSubnets - To get details about subnet.
+>Get-IPAMSubnets - To get details about subnet using SubnetId, SubnetName, SubnetNameLike, ParentSubnetId, StartAddress.
 >
 >Get-IPAMFreeIP - To get next available subnet form IPAM.
 >
