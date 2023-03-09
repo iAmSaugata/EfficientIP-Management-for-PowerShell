@@ -144,6 +144,8 @@ Param (
     [Parameter()][string] $SubnetNameLike,
     [Parameter()][string] $ParentSubnetId,
     [Parameter()][string] $StartAddress,
+    [Parameter()][string] $EndAddress,
+    [Parameter()][string] $StartAddressLike,
     [Switch]$Quite,
     [Switch]$RawData
 )
@@ -167,6 +169,8 @@ Param (
                         $MyObject | Add-Member @{CIDR=$CIDRMapping["$([math]::log($($subnet.subnet_size),2))"]}
                         $MyObject | Add-Member @{SubnetUsedPercent=$($subnet.subnet_allocated_percent)}
                         $MyObject | Add-Member @{ParentSubnetId=$($subnet.parent_subnet_id)}
+                        $MyObject | Add-Member @{IPAMSiteName=$($subnet.site_name)}
+                        $MyObject | Add-Member @{IPAMSiteId=$($subnet.site_id)}
                         $MyObjects += $MyObject
                     }                    
                     return $MyObjects
@@ -212,6 +216,102 @@ Param (
                         $MyObject | Add-Member @{CIDR=$CIDRMapping["$([math]::log($($subnet.subnet_size),2))"]}
                         $MyObject | Add-Member @{SubnetUsedPercent=$($subnet.subnet_allocated_percent)}
                         $MyObject | Add-Member @{ParentSubnetId=$($subnet.parent_subnet_id)}
+                        $MyObject | Add-Member @{IPAMSiteName=$($subnet.site_name)}
+                        $MyObject | Add-Member @{IPAMSiteId=$($subnet.site_id)}
+                        $MyObjects += $MyObject
+                    }                    
+                    return $MyObjects
+                }
+                else
+                {
+                    if(!$Quite.IsPresent)
+                    {
+                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    }
+                }
+            }
+            else
+            {
+                if($getSubnets)
+                {
+                    return $getSubnets
+                }
+                else
+                {
+                    if(!$Quite.IsPresent)
+                    {
+                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    }
+                }
+            }
+        }
+        if($EndAddress)
+        {
+            $getSubnets = Invoke-RestMethod -Headers $IPAMAuth -Method Get -Uri "$IPAMURI/rest/ip_block_subnet_list?WHERE=end_hostaddr='$EndAddress'"
+            if(!$RawData.IsPresent)
+            {
+                if($getSubnets)
+                {
+                    $MyObjects=@()
+                    foreach ($subnet in $getSubnets)
+                    {
+                        $MyObject = New-Object -TypeName PSObject
+                        $MyObject | Add-Member @{SubnetName=$($subnet.subnet_name)}       
+                        $MyObject | Add-Member @{SubnetId=$($subnet.subnet_id)}
+                        $MyObject | Add-Member @{StartAddress=$($subnet.start_hostaddr)}
+                        $MyObject | Add-Member @{EndAddress=$($subnet.end_hostaddr)}
+                        $MyObject | Add-Member @{CIDR=$CIDRMapping["$([math]::log($($subnet.subnet_size),2))"]}
+                        $MyObject | Add-Member @{SubnetUsedPercent=$($subnet.subnet_allocated_percent)}
+                        $MyObject | Add-Member @{ParentSubnetId=$($subnet.parent_subnet_id)}
+                        $MyObject | Add-Member @{IPAMSiteName=$($subnet.site_name)}
+                        $MyObject | Add-Member @{IPAMSiteId=$($subnet.site_id)}
+                        $MyObjects += $MyObject
+                    }                    
+                    return $MyObjects
+                }
+                else
+                {
+                    if(!$Quite.IsPresent)
+                    {
+                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    }
+                }
+            }
+            else
+            {
+                if($getSubnets)
+                {
+                    return $getSubnets
+                }
+                else
+                {
+                    if(!$Quite.IsPresent)
+                    {
+                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    }
+                }
+            }
+        }
+        if($StartAddressLike)
+        {
+            $getSubnets = Invoke-RestMethod -Headers $IPAMAuth -Method Get -Uri "$IPAMURI/rest/ip_block_subnet_list?WHERE=start_hostaddr+like+'%$StartAddressLike%'"
+            if(!$RawData.IsPresent)
+            {
+                if($getSubnets)
+                {
+                    $MyObjects=@()
+                    foreach ($subnet in $getSubnets)
+                    {
+                        $MyObject = New-Object -TypeName PSObject
+                        $MyObject | Add-Member @{SubnetName=$($subnet.subnet_name)}       
+                        $MyObject | Add-Member @{SubnetId=$($subnet.subnet_id)}
+                        $MyObject | Add-Member @{StartAddress=$($subnet.start_hostaddr)}
+                        $MyObject | Add-Member @{EndAddress=$($subnet.end_hostaddr)}
+                        $MyObject | Add-Member @{CIDR=$CIDRMapping["$([math]::log($($subnet.subnet_size),2))"]}
+                        $MyObject | Add-Member @{SubnetUsedPercent=$($subnet.subnet_allocated_percent)}
+                        $MyObject | Add-Member @{ParentSubnetId=$($subnet.parent_subnet_id)}
+                        $MyObject | Add-Member @{IPAMSiteName=$($subnet.site_name)}
+                        $MyObject | Add-Member @{IPAMSiteId=$($subnet.site_id)}
                         $MyObjects += $MyObject
                     }                    
                     return $MyObjects
@@ -257,6 +357,8 @@ Param (
                         $MyObject | Add-Member @{CIDR=$CIDRMapping["$([math]::log($($subnet.subnet_size),2))"]}
                         $MyObject | Add-Member @{SubnetUsedPercent=$($subnet.subnet_allocated_percent)}
                         $MyObject | Add-Member @{ParentSubnetId=$($subnet.parent_subnet_id)}
+                        $MyObject | Add-Member @{IPAMSiteName=$($subnet.site_name)}
+                        $MyObject | Add-Member @{IPAMSiteId=$($subnet.site_id)}
                         $MyObjects += $MyObject
                     }                    
                     return $MyObjects
@@ -303,6 +405,8 @@ Param (
                         $MyObject | Add-Member @{CIDR=$CIDRMapping["$([math]::log($($subnet.subnet_size),2))"]}
                         $MyObject | Add-Member @{SubnetUsedPercent=$($subnet.subnet_allocated_percent)}
                         $MyObject | Add-Member @{ParentSubnetId=$($subnet.parent_subnet_id)}
+                        $MyObject | Add-Member @{IPAMSiteName=$($subnet.site_name)}
+                        $MyObject | Add-Member @{IPAMSiteId=$($subnet.site_id)}
                         $MyObjects += $MyObject                        
                     }                    
                     return $MyObjects
@@ -349,6 +453,8 @@ Param (
                         $MyObject | Add-Member @{CIDR=$CIDRMapping["$([math]::log($($subnet.subnet_size),2))"]}
                         $MyObject | Add-Member @{SubnetUsedPercent=$($subnet.subnet_allocated_percent)}
                         $MyObject | Add-Member @{ParentSubnetId=$($subnet.parent_subnet_id)}
+                        $MyObject | Add-Member @{IPAMSiteName=$($subnet.site_name)}
+                        $MyObject | Add-Member @{IPAMSiteId=$($subnet.site_id)}
                         $MyObjects += $MyObject
                     }                    
                     return $MyObjects
