@@ -15,10 +15,15 @@ Get-IPAMQueryMaster -SiteId "SiteID"
 
 # This function will help you get the infromation about subnet(s). This function support multiple query string.
 Get-IPAMSubnets -SubnetNameLike "AWS"
+
 Get-IPAMSubnets -SubnetName "Subnet Name" -RawData
+
 Get-IPAMSubnets -StartAddress "SubnetStartIP" -RawData
+
 Get-IPAMSubnets -SubnetId "SubnetID"
+
 Get-IPAMSubnets -ParentSubnetId "ParentSubnetID"
+
 Get-IPAMSubnets -SubnetName "Subnet Name"
 
 # This function will help you get the get the next availabel Subnet range in a parent subnet.
