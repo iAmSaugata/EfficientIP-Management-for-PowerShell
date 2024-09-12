@@ -8,7 +8,9 @@ Set-IPAMAuthURI -URI "https://fqdn.efficientip.host" -UserName "Account-Having-A
 
 # This function will help you get Query Master Subnet
 Get-IPAMQueryMaster -SiteNameLike "similar name"
+
 Get-IPAMQueryMaster -SiteName "exact name"
+
 Get-IPAMQueryMaster -SiteId "SiteID"
 
 # This function will help you get the infromation about subnet(s). This function support multiple query string.
