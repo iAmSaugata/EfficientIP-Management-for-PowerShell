@@ -190,7 +190,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -204,7 +204,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -237,7 +237,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -251,7 +251,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -284,7 +284,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -298,7 +298,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -331,7 +331,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -345,7 +345,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -378,7 +378,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -392,7 +392,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -426,7 +426,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -440,7 +440,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -474,7 +474,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -488,7 +488,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -496,7 +496,7 @@ Param (
     }
     else
     {
-        Write-Host -ForegroundColor Red "No authentication stored, please store it using Set-IPAMAuthURI command."
+        Write-Output "No authentication stored, please store it using Set-IPAMAuthURI command."
     }
 }
 
@@ -853,42 +853,74 @@ function Get-IPAMFreeHost {
 
 # This function will help you create new IP Entry in Subnet
 # New-IPAMHost -IPAddress "Free IP Address" -Name "HostName" -SiteID "SiteID"
+# New-IPAMHost -IPAddress "Free IP Address" -Name "HostName" -SiteID "SiteID" -IPClass "IP-Class-Type"
 function New-IPAMHost {
     Param (
         [Parameter(Mandatory=$true)][string] $IPAddress,
         [Parameter(Mandatory=$true)][string] $Name,
         [Parameter(Mandatory=$true)][string] $SiteID,
-        [Switch] $Quiet
+        [Parameter()][string] $IPClass,     
+        [Switch] $RawData,
+        [Switch] $Quite
     )
 
     if ($IPAMAuth) {
         # Construct the API URL
-        $url="$IPAMURI/rest/ip_add?hostaddr=$IPAddress&name=$Name&site_id=$SiteID"
+        if($IPClass)
+        {
+            $url="$IPAMURI/rest/ip_add?hostaddr=$IPAddress&name=$Name&site_id=$SiteID&ip_class_name=$IPClass"
+        }
+        else
+        {
+            $url="$IPAMURI/rest/ip_add?hostaddr=$IPAddress&name=$Name&site_id=$SiteID"
+        }        
 
         try {
             # Make the API call
-            $response=Invoke-RestMethod -Uri $url -Method Post -Headers $IPAMAuth -SkipCertificateCheck
+            $response=Invoke-RestMethod -Uri $url -Method Post -Headers $IPAMAuth -SkipCertificateCheck -ErrorAction SilentlyContinue
 
             # Check for a successful response
-            if ($response.ret_oid) {
-                # Create the result object and add properties using the short form
-                $HostObject=New-Object -TypeName PSObject
-                $HostObject | Add-Member @{IPAddress=$IPAddress}
-                $HostObject | Add-Member @{HostID=$response.ret_oid}
-                $HostObject | Add-Member @{HostName=$Name}
-                $HostObject | Add-Member @{SiteName=(Get-IPAMQueryMaster -SiteId $SiteID).MasterSiteName}
-                $HostObject | Add-Member @{SiteID=$SiteID}
+            if (!$RawData.IsPresent) {
+                if ($response.ret_oid) {
+                    # Create the result object and add properties using the short form
+                    $HostObject=New-Object -TypeName PSObject
+                    $HostObject | Add-Member @{IPAddress=$IPAddress}
+                    $HostObject | Add-Member @{HostID=$response.ret_oid}
+                    $HostObject | Add-Member @{HostName=$Name}
+                    $HostObject | Add-Member @{SiteName=(Get-IPAMQueryMaster -SiteId $SiteID).MasterSiteName}
+                    $HostObject | Add-Member @{SiteID=$SiteID}
 
-                # Return the result object
-                return $HostObject
+                    # Return the result object
+                    return $HostObject
+                } else {
+                    if (-not $Quite.IsPresent) {
+                        Write-Host -ForegroundColor Yellow "No IP address was added. Check the response for more details."
+                    }
+                }
             } else {
-                if (-not $Quiet.IsPresent) {
-                    Write-Host -ForegroundColor Yellow "No IP address was added. Check the response for more details."
+                if ($response) {
+                    return $response
+                } else {
+                    if (!$Quite.IsPresent) {
+                        Write-Host -ForegroundColor Yellow "No free IP addresses found in the specified subnet."
+                    }
                 }
             }
         } catch {
             # Error handling with detailed error message
-            Write-Host -ForegroundColor Red "Error adding IP address: $_"
+            $exception = $_.ToString().Trim() | ConvertFrom-Json
+            # Write-Output $exception
+            if($($exception.ip_addr)) {
+                Write-Host -ForegroundColor Red "Failed to create entry for $IPAddress in IPAM with error code $($exception.errno). Name $Name already used by $($exception.ip_addr)."
+            } else {
+                Write-Error "$_"
+            }
+            # Write-Output "Severity: $($exception.severity)"
+            # Write-Output "Error Number: $($exception.errno)"
+            # Write-Output "Error Message: $($exception.errmsg)"
+            # Write-Output "IP Address: $($exception.ip_addr)"
+            # Write-Output "Site Name: $($exception.site_name)"
+            # Write-Host -ForegroundColor Red "$jsonObject"
         }
     } else {
         # Handle missing authentication
@@ -1016,8 +1048,7 @@ function Remove-IPAMHostIP {
                     {
                         if($removeIPAddress)
                         {                
-                            $MyObject=New-Object -TypeName PSObject
-                            
+                            $MyObject=New-Object -TypeName PSObject                            
                             $MyObject | Add-Member @{HostID=$($verifyIPAddress.ip_id)}
                             $MyObject | Add-Member @{IPAddress=$IPAddress}
                             $MyObject | Add-Member @{HostName=$($verifyIPAddress.name)}
