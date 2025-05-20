@@ -60,6 +60,8 @@ Get-IPAMSubnets -StartAddress "192.168.10.0"
 - `SubnetId` (int): ID of the subnet.
 - `ParentSubnetId` (int): ID of the parent subnet.
 - `StartAddress` (string): Starting IP address of the subnet.
+- `EndAddress` (string): Ending IP address range filter.
+- `StartAddressLike` (string): Starting IP address of the subnet like.
 
 ---
 
