@@ -1,6 +1,6 @@
 # Name: EfficientIP-Management
 # Created By: Saugata Datta
-# Version: 2.5
+# Version: 2.7
 ############################
 
 # This function will help you set the IPAM authentication and endpoint details in memory for future use.
@@ -49,7 +49,7 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    Write-Output "Nothing found, please search with correct value."
                 }
             }
             else
@@ -60,7 +60,7 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    Write-Output "Nothing found, please search with correct value."
                 }
             }
         }
@@ -81,7 +81,7 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    Write-Output "Nothing found, please search with correct value."
                 }
             }
             else
@@ -92,7 +92,7 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    Write-Output "Nothing found, please search with correct value."
                 }
             }
         }
@@ -118,7 +118,7 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    Write-Output "Nothing found, please search with correct value."
                 }
             }
             else
@@ -129,14 +129,14 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                    Write-Output "Nothing found, please search with correct value."
                 }
             }
         }        
     }
     else
     {
-        Write-Host -ForegroundColor Red "No authentication stored, please store it using Set-IPAMAuthURI command."
+        Write-Output "No authentication stored, please store it using Set-IPAMAuthURI command."
     }
 }
 
@@ -552,7 +552,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -564,7 +564,7 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Missing information, you have to specify correct SubnetName and CIDR value."
+                    Write-Output "Missing information, you have to specify correct SubnetName and CIDR value."
                 }
             }
         }
@@ -607,7 +607,7 @@ Param (
                 {
                     if(!$Quite.IsPresent)
                     {
-                        Write-Host -ForegroundColor Yellow "Nothing found, please search with correct value."
+                        Write-Output "Nothing found, please search with correct value."
                     }
                 }
             }
@@ -619,14 +619,14 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Missing information, you have to specify correct SubnetName and CIDR value."
+                    Write-Output "Missing information, you have to specify correct SubnetName and CIDR value."
                 }
             }
         }     
     }
     else
     {
-        Write-Host -ForegroundColor Red "No authentication stored, please store it using Set-IPAMAuthURI command."
+        Write-Output "No authentication stored, please store it using Set-IPAMAuthURI command."
     }
 }
 
@@ -650,7 +650,7 @@ Param (
                 $($newSubnet.errno)
                 if($($newSubnet.errno))
                 {
-                    Write-Host -ForegroundColor Yellow "$($newSubnet.errmsg), you have to specify correct value."
+                    Write-Output "$($newSubnet.errmsg), you have to specify correct value."
                     break;
                 }
                 if($newSubnet)
@@ -660,12 +660,12 @@ Param (
                     $MyObject | Add-Member @{NewSubnetID=$newSubnet.ret_oid}
                     $MyObject | Add-Member @{NewSubnetCIDR=$CIDR}
                     #$MyObject | Add-Member @{ParentSubnetId=$ParentSubnetId} 
-                    Write-Host -ForegroundColor Green "Subnet created successfully with SubnetId : $($newSubnet.ret_oid)"              
+                    Write-Output "Subnet created successfully with SubnetId : $($newSubnet.ret_oid)"              
                     return $MyObject
                 }                
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Missing information, you have to specify correct value."
+                    Write-Output "Missing information, you have to specify correct value."
                 }
             }
             else
@@ -676,14 +676,14 @@ Param (
                 }
                 else
                 {
-                    Write-Host -ForegroundColor Yellow "Missing information, you have to specify correct SubnetName, SubnetRange, Parent Subnet Id and CIDR value."
+                    Write-Output "Missing information, you have to specify correct SubnetName, SubnetRange, Parent Subnet Id and CIDR value."
                 }
             }
         }      
     }
     else
     {
-        Write-Host -ForegroundColor Red "No authentication stored, please store it using Set-IPAMAuthURI command."
+        Write-Output "No authentication stored, please store it using Set-IPAMAuthURI command."
     }
 }
 
@@ -704,7 +704,7 @@ Param (
             {
                 if($(Get-IPAMSubnets -ParentSubnetId $SubnetId -Quite))
                 {
-                    Write-Host -ForegroundColor Red "'$($verifySubnet.subnet_name)' is a master subnet, not allowed to delete from here."
+                    Write-Output "'$($verifySubnet.subnet_name)' is a master subnet, not allowed to delete from here."
                     break;
                 }
                 $SiteId=$($verifySubnet.site_id)
@@ -719,7 +719,7 @@ Param (
                             $MyObject | Add-Member @{SubnetName=$($verifySubnet.subnet_name)}
                             $MyObject | Add-Member @{SubnetId=$SubnetId}
                             $MyObject | Add-Member @{SiteId=$SiteId} 
-                            Write-Host -ForegroundColor Green "Subnet deleted successfully."            
+                            Write-Output "Subnet deleted successfully."            
                             return $MyObject
                         }
                     }
@@ -731,20 +731,20 @@ Param (
                         }
                         else
                         {
-                            Write-Host -ForegroundColor Yellow "Missing information, you have to specify correct SubnetId."
+                            Write-Output "Missing information, you have to specify correct SubnetId."
                         }
                     }
                 }
             }
             else
             {
-                Write-Host -ForegroundColor Yellow "You have to specify correct SubnetId."
+                Write-Output "You have to specify correct SubnetId."
             }
         }      
     }
     else
     {
-        Write-Host -ForegroundColor Red "No authentication stored, please store it using Set-IPAMAuthURI command."
+        Write-Output "No authentication stored, please store it using Set-IPAMAuthURI command."
     }
 }
 
@@ -775,7 +775,7 @@ function Get-IPAMHosts {
                     return $HostObjects
                 } else {
                     if (!$Quite.IsPresent) {
-                        Write-Host -ForegroundColor Yellow "No hosts found in the specified subnet."
+                        Write-Output "No hosts found in the specified subnet."
                     }
                 }
             } else {
@@ -783,15 +783,15 @@ function Get-IPAMHosts {
                     return $getHosts
                 } else {
                     if (!$Quite.IsPresent) {
-                        Write-Host -ForegroundColor Yellow "No hosts found in the specified subnet."
+                        Write-Output "No hosts found in the specified subnet."
                     }
                 }
             }
         } else {
-            Write-Host -ForegroundColor Red "Please provide a SubnetId to fetch host information."
+            Write-Output "Please provide a SubnetId to fetch host information."
         }
     } else {
-        Write-Host -ForegroundColor Red "No authentication stored, please store it using Set-IPAMAuthURI command."
+        Write-Output "No authentication stored, please store it using Set-IPAMAuthURI command."
     }
 }
 
@@ -894,7 +894,7 @@ function New-IPAMHost {
                     return $HostObject
                 } else {
                     if (-not $Quite.IsPresent) {
-                        Write-Host -ForegroundColor Yellow "No IP address was added. Check the response for more details."
+                        Write-Output "No IP address was added. Check the response for more details."
                     }
                 }
             } else {
@@ -902,7 +902,7 @@ function New-IPAMHost {
                     return $response
                 } else {
                     if (!$Quite.IsPresent) {
-                        Write-Host -ForegroundColor Yellow "No free IP addresses found in the specified subnet."
+                        Write-Output "No free IP addresses found in the specified subnet."
                     }
                 }
             }
@@ -910,10 +910,10 @@ function New-IPAMHost {
             # Error handling with detailed error message
             $exception = $_.ToString().Trim() | ConvertFrom-Json
             # Write-Output $exception
-            if($($exception.ip_addr)) {
-                Write-Host -ForegroundColor Red "Failed to create entry for $IPAddress in IPAM with error code $($exception.errno). Name $Name already used by $($exception.ip_addr)."
+            if($($exception.ip_addr)) {                
+                Write-Output "Failed to create entry for $IPAddress in IPAM with error code $($exception.errno). Name $Name already used by $($exception.ip_addr)."
             } else {
-                Write-Error "$_"
+                Write-Output "$_"
             }
             # Write-Output "Severity: $($exception.severity)"
             # Write-Output "Error Number: $($exception.errno)"
@@ -924,7 +924,7 @@ function New-IPAMHost {
         }
     } else {
         # Handle missing authentication
-        Write-Host -ForegroundColor Red "No authentication stored. Please use the Set-IPAMAuthURI command to store authentication."
+        Write-Output "No authentication stored. Please use the Set-IPAMAuthURI command to store authentication."
     }
 }
 
@@ -963,15 +963,15 @@ function Get-IPAMHostInfo {
                     return $HostInfo
                 }
             } else {
-                Write-Host -ForegroundColor Yellow "No information found for HostID: $HostID"
+                Write-Output "No information found for HostID: $HostID"
             }
         } catch {
             # Error handling with detailed error message
-            Write-Host -ForegroundColor Red "Error retrieving information for HostID $HostID : $_"
+            Write-Output "Error retrieving information for HostID $HostID : $_"
         }
     } else {
         # Handle missing authentication
-        Write-Host -ForegroundColor Red "No authentication stored. Please use the Set-IPAMAuthURI command to store authentication."
+        Write-Output "No authentication stored. Please use the Set-IPAMAuthURI command to store authentication."
     }
 }
 
@@ -998,6 +998,8 @@ function Get-IPAMHostIP {
                     # Create the result object and add properties using the short form
                     $HostInfo=New-Object -TypeName PSObject
                     $HostInfo | Add-Member @{HostID=$response.ip_id}
+                    $HostInfo | Add-Member @{IPType=$response.type}
+                    $HostInfo | Add-Member @{IPClass=$response.ip_class_name}
                     $HostInfo | Add-Member @{IPAddress=$response.hostaddr}
                     $HostInfo | Add-Member @{HostName=$response.name}                    
                     $HostInfo | Add-Member @{SubnetName=$response.subnet_name}
@@ -1009,78 +1011,75 @@ function Get-IPAMHostIP {
                     return $HostInfo
                 }
             } else {
-                Write-Host -ForegroundColor Yellow "No information found for IPAddress: $IPAddress"
+                # Keep Write-Host - This will not stored in variable.
+                Write-Host "No information found for IPAddress: $IPAddress"
             }
         } catch {
             # Error handling with detailed error message
-            Write-Host -ForegroundColor Red "Error retrieving information for IPAddress $IPAddress : $_"
+            Write-Output "Error retrieving information for IPAddress $IPAddress : $_"
         }
     } else {
         # Handle missing authentication
-        Write-Host -ForegroundColor Red "No authentication stored. Please use the Set-IPAMAuthURI command to store authentication."
+        Write-Output "No authentication stored. Please use the Set-IPAMAuthURI command to store authentication."
     }
 }
 
 # This function will help you Remove IPAddress from IPAM
 # Remove-IPAMHostIP -IPAddress "IPAddress"
 function Remove-IPAMHostIP {
-    [CmdletBinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     Param (
-        [Parameter(Mandatory=$true)][string] $IPAddress,
+        [Parameter(Mandatory = $true)][string]$IPAddress,
         [Switch]$RawData
     )
-    if($IPAMAuth) {
-        if($IPAddress)
-        {
-            $verifyIPAddress = Invoke-RestMethod -Headers $IPAMAuth -Method Get -Uri "$IPAMURI/rest/ip_address_list?WHERE=hostaddr='$IPAddress'" -SkipCertificateCheck
-            if($verifyIPAddress)
-            {
-                if($($verifyIPAddress.name -like "Gatewa*" -or $verifyIPAddress.hostaddr -eq $verifyIPAddress.subnet_start_hostaddr -or $verifyIPAddress.hostaddr -eq $verifyIPAddress.subnet_end_hostaddr))
-                {
-                    Write-Host -ForegroundColor Red "$IPAddress is a Gateway or Non assignable IPAddress, not allowed to delete from here."
-                    break;
-                }
-                $SiteId=$($verifyIPAddress.site_id)
-                if ($PSCmdlet.ShouldProcess("Host Name - '$($verifyIPAddress.name)' : IPAddress - $($verifyIPAddress.hostaddr)"))
-                {
-                    $removeIPAddress=Invoke-RestMethod -Headers $IPAMAuth -Method Post -Uri "$IPAMURI/rpc/ip_delete?hostaddr=$IPAddress&site_id=$SiteId" -SkipCertificateCheck
-                    if(!$RawData.IsPresent)
-                    {
-                        if($removeIPAddress)
-                        {                
-                            $MyObject=New-Object -TypeName PSObject                            
-                            $MyObject | Add-Member @{HostID=$($verifyIPAddress.ip_id)}
-                            $MyObject | Add-Member @{IPAddress=$IPAddress}
-                            $MyObject | Add-Member @{HostName=$($verifyIPAddress.name)}
-                            $MyObject | Add-Member @{SubnetName=$verifyIPAddress.subnet_name}
-                            $MyObject | Add-Member @{SubnetID=$verifyIPAddress.subnet_id}
-                            $MyObject | Add-Member @{SiteName=$verifyIPAddress.site_name}
-                            $MyObject | Add-Member @{SiteId=$SiteId} 
-                            Write-Host -ForegroundColor Green "IPAddress with following details deleted successfully."            
-                            return $MyObject
-                        }
-                    }
-                    else
-                    {
-                        if($removeIPAddress)
-                        {
-                            return $removeIPAddress
-                        }
-                        else
-                        {
-                            Write-Host -ForegroundColor Yellow "Missing information, you have to specify correct IPAddress."
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Write-Host -ForegroundColor Yellow "You have to specify correct IPAddress."
-            }
-        }      
+
+    if (-not $IPAMAuth) {
+        Write-Output "No authentication stored. Please store it using Set-IPAMAuthURI command."
+        return
     }
-    else
-    {
-        Write-Host -ForegroundColor Red "No authentication stored, please store it using Set-IPAMAuthURI command."
+
+    # Fetch IP details from IPAM
+    $verifyIPAddress = Invoke-RestMethod -Headers $IPAMAuth -Method Get -Uri "$IPAMURI/rest/ip_address_list?WHERE=hostaddr='$IPAddress'" -SkipCertificateCheck
+
+    if (-not $verifyIPAddress) {
+        Write-Output "The specified IP address '$IPAddress' was not found in IPAM."
+        return
+    }
+
+    # Check if the IP is a gateway or non-assignable IP
+    if ($verifyIPAddress.name -like "Gatewa*" -or 
+        $verifyIPAddress.hostaddr -eq $verifyIPAddress.subnet_start_hostaddr -or 
+        $verifyIPAddress.hostaddr -eq $verifyIPAddress.subnet_end_hostaddr) {
+        Write-Output "The IP address '$IPAddress' is a Gateway or a Non-Assignable IP, and cannot be deleted."
+        return
+    }
+
+    $SiteId = $verifyIPAddress.site_id
+
+    if ($PSCmdlet.ShouldProcess("Host Name - '$($verifyIPAddress.name)' : IPAddress - $IPAddress", "Delete")) {
+        $removeIPAddress = Invoke-RestMethod -Headers $IPAMAuth -Method Post -Uri "$IPAMURI/rpc/ip_delete?hostaddr=$IPAddress&site_id=$SiteId" -SkipCertificateCheck
+
+        if (-not $removeIPAddress) {
+            Write-Output "Failed to delete IP address '$IPAddress'."
+            return
+        }
+
+        if ($RawData.IsPresent) {
+            return $removeIPAddress
+        }
+
+        # Create and return a PowerShell object with deleted IP details
+        $MyObject = [PSCustomObject]@{
+            HostID    = $verifyIPAddress.ip_id
+            IPAddress = $IPAddress
+            HostName  = $verifyIPAddress.name
+            SubnetName = $verifyIPAddress.subnet_name
+            SubnetID  = $verifyIPAddress.subnet_id
+            SiteName  = $verifyIPAddress.site_name
+            SiteId    = $SiteId
+        }
+
+        Write-Output "IP address '$IPAddress' deleted successfully."
+        return $MyObject
     }
 }
